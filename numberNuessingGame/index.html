@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number guessing game</title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+        .box{
+            width: 500px;
+            margin: 0px auto;
+            padding: 100px 50px;
+        }
+        .box p{
+            padding: 20px 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <h1>猜数字游戏</h1>
+        <p>我们从1到100之间随机取一个数。看你10轮之内能不能猜出来。我们将告诉你你猜的是大是小。</p>
+        <div id="control">
+            请输入你猜的数字：<input type="text" value="Please input a number"><button>提交</button>
+        </div>
+    </div>
+    <div id="result">
+        <p id="display"></p>
+        <p id="record"></p>
+        <p id="round">轮数：</p>
+    </div>
+    <script>
+        var submit = document.querySelector("#control button");
+        var display = document.querySelector("#display");
+        var input = document.querySelector("div#control input");
+        var number = Math.floor(Math.random() * 100 + 1);
+        var record = document.querySelector("#record");
+        var round = document.querySelector("#round");
+
+        var guessTurn = 1;
+        function rounding() {
+
+            round.textContent = "轮数：" + guessTurn;
+            guessTurn++;
+        }
+        function recording(value) {
+            record.textContent = record.textContent + value + " ";
+        }
+        function end() {
+            submit.disabled = true;
+            input.disabled = true;
+            var restButton = document.createElement("button");
+            restButton.textContent = "重新开始";
+            restButton.id = "rest";
+            document.querySelector("#result").appendChild(restButton);
+            restButton.addEventListener("click",restStar);
+        }
+        function checkGuess() {
+            var num = Number(input.value);
+            if(!isNaN(num)){
+                if(num > number){
+                    display.textContent = "太大了";
+                    recording(num);
+                    rounding();
+                }
+                else if(num < number){
+                    display.textContent = "太小了";
+                    recording(num);
+                    rounding();
+                }
+                else{
+                    display.textContent = "你猜对了！总共用了" + guessTurn + "轮";
+                    display.style.backgroundColor = "green";
+                    display.style.color = "white";
+                    recording(num);
+                    rounding();
+                    end();
+                }
+                if(guessTurn > 10){
+                    display.textContent = "10轮到了~"
+                    display.style.backgroundColor = "red";
+                    display.style.color = "white";
+                    end();
+                }
+            }else {
+                display.textContent = "请输入一个数字！"
+                display.style.backgroundColor = "red";
+                display.style.color = "white";
+                end();
+            }
+        }
+        function restStar() {
+            display.style.backgroundColor = "white";
+            display.style.color = "black";
+            number = Math.floor(Math.random() * 100 + 1);
+            record.textContent = "";
+            submit.disabled = false;
+            input.disabled = false;
+            display.textContent = "";
+            guessTurn = 1;
+            round.textContent = "轮数：";
+            input.focus();
+            var restButton = document.querySelector("#result button");
+            document.querySelector("#result").removeChild(restButton);
+        }
+        submit.addEventListener("click",checkGuess);
+
+
+
+
+    </script>
+</body>
+</html>
